@@ -14,10 +14,17 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      
       - name: Pull from hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git pull --rebase https://Vijayakumar1234:$HF_TOKEN@huggingface.co/spaces/Vijayakumar1234/Search_Engine_llm main
+        run: |
+          git pull --rebase https://Vijayakumar1234:$HF_TOKEN@huggingface.co/spaces/Vijayakumar1234/Search_Engine_llm main || true
+          # Automatically resolve conflicts by keeping the remote (Hub) changes
+          git checkout --theirs requirements.txt || true
+          git add requirements.txt || true
+          git rebase --continue || true
+      
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
