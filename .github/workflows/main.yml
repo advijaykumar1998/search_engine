@@ -14,18 +14,23 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+          
+      - name: Set Git Identity
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
       
       - name: Pull from hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git pull --rebase https://Vijayakumar1234:$HF_TOKEN@huggingface.co/spaces/Vijayakumar1234/Search_Engine_llm main || true
-          # Automatically resolve conflicts by keeping the remote (Hub) changes
+          # Automatically resolve conflicts
           git checkout --theirs requirements.txt || true
           git add requirements.txt || true
-          git rebase --continue || true
+          git rebase --continue || echo "No rebase in progress"
       
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://Vijayakumar1234:$HF_TOKEN@huggingface.co/spaces/Vijayakumar1234/Search_Engine_llm main
+        run: git push --force https://Vijayakumar1234:$HF_TOKEN@huggingface.co/spaces/Vijayakumar1234/Search_Engine_llm main
